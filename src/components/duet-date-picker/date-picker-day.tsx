@@ -6,6 +6,7 @@ export type DatePickerDayProps = {
   focusedDay: Date
   today: Date
   day: Date
+  isHighlighted: boolean
   inRange: boolean
   onDaySelect: (event: MouseEvent, day: Date) => void
   dateFormatter: DuetDateFormatter
@@ -17,6 +18,7 @@ export const DatePickerDay: FunctionalComponent<DatePickerDayProps> = ({
   focusedDay,
   today,
   day,
+  isHighlighted,
   onDaySelect,
   onKeyboardNavigation,
   focusedDayRef,
@@ -39,6 +41,7 @@ export const DatePickerDay: FunctionalComponent<DatePickerDayProps> = ({
         "is-outside": isOutsideRange,
         "is-disabled": isDisabled,
         "is-today": isToday,
+        "is-highlighted": isHighlighted,
       }}
       tabIndex={isFocused ? 0 : -1}
       onClick={handleClick}

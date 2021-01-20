@@ -10,6 +10,7 @@ import {
   State,
   Listen,
   Method,
+  Watch,
 } from "@stencil/core"
 import {
   addDays,
@@ -104,6 +105,7 @@ export class DuetDatePicker implements ComponentInterface {
   @State() activeFocus = false
   @State() focusedDay = new Date()
   @State() open = false
+  @State() highlighted: Array<string>
 
   /**
    * Public Property API
@@ -158,6 +160,11 @@ export class DuetDatePicker implements ComponentInterface {
    * This setting can be used alone or together with the min property.
    */
   @Prop() max: string = ""
+
+  /**
+   * Days to highlight. Must be in IS0-8601 format: YYYY-MM-DD.
+   */
+  @Prop() highlightedDays: string = ""
 
   /**
    * Which day is considered first day of the week? `0` for Sunday, `1` for Monday, etc.
@@ -229,6 +236,17 @@ export class DuetDatePicker implements ComponentInterface {
     }
 
     this.hide(false)
+  }
+
+  @Watch("highlightedDays")
+  parseHighlightedDays(newValue: string) {
+    if (newValue) {
+      this.highlighted = JSON.parse(newValue).map(({ date }) => parseISODate(date))
+    }
+  }
+
+  componentWillLoad() {
+    this.parseHighlightedDays(this.highlightedDays)
   }
 
   /**
@@ -704,6 +722,7 @@ export class DuetDatePicker implements ComponentInterface {
               <DatePickerMonth
                 selectedDate={valueAsDate}
                 focusedDate={this.focusedDay}
+                highlightedDays={this.highlighted}
                 onDateSelect={this.handleDaySelect}
                 onKeyboardNavigation={this.handleKeyboardNavigation}
                 labelledById={this.dialogLabelId}
